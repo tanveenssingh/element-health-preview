@@ -1,0 +1,10 @@
+/* Preview-only behaviour styles (the Shopify build gets its own). */
+.eh-swipe { overflow-x: auto !important; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.eh-swipe::-webkit-scrollbar { display: none; }
+.eh-swipe > * { scroll-snap-align: start; scroll-snap-stop: always; }
+.eh-swipe::after { content: ""; flex: 0 0 2px; }
+
+/* Marquee rows become real scroll containers driven by preview.js */
+.eh-scroll { overflow-x: auto !important; overflow-y: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; cursor: grab; }
+.eh-scroll::-webkit-scrollbar { display: none; }
+.eh-scroll .eh-marquee { animation: none !important; }
