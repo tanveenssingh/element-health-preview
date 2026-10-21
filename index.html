@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Element Health · Website preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Josefin+Sans:wght@600;700&display=swap">
+<style>
+  :root { --cream:#F7F2EC; --blush:#E8DCD2; --slate:#3E4256; --ink:#1F1F1F; --muted:#6E6660; --line:rgba(31,31,31,0.12); }
+  html, body { margin:0; height:100%; background:#D9CFC6; font-family: Roboto, Arial, sans-serif; color: var(--ink); }
+  body { display:flex; flex-direction:column; }
+  header { height:56px; box-sizing:border-box; padding:0 20px; background:var(--cream); border-bottom:1px solid var(--line); display:flex; align-items:center; gap:18px; flex:0 0 auto; }
+  .brand { font-family:'Josefin Sans', sans-serif; font-weight:700; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; white-space:nowrap; }
+  .brand span { color:var(--muted); font-weight:600; letter-spacing:0.14em; text-transform:none; font-family:Roboto, sans-serif; font-size:12px; margin-left:10px; }
+  select { height:34px; border:1px solid var(--line); border-radius:999px; padding:0 14px; background:#fff; font:inherit; font-size:13px; }
+  .devices { margin-left:auto; display:flex; gap:4px; background:#fff; border:1px solid var(--line); border-radius:999px; padding:3px; }
+  .devices button { height:28px; padding:0 14px; border:0; border-radius:999px; background:transparent; font:inherit; font-size:12px; font-weight:500; letter-spacing:0.04em; color:var(--muted); cursor:pointer; }
+  .devices button[aria-pressed="true"] { background:var(--slate); color:var(--cream); }
+  .open { font-size:12px; color:var(--muted); text-decoration:none; white-space:nowrap; }
+  .open:hover { color:var(--ink); }
+  main { flex:1 1 auto; min-height:0; position:relative; overflow:auto; display:flex; justify-content:center; align-items:flex-start; padding:24px; box-sizing:border-box; }
+  .stage { flex:0 0 auto; background:#fff; box-shadow:0 20px 60px rgba(31,31,31,0.18); border-radius:14px; overflow:hidden; transform-origin:top center; }
+  .stage iframe { display:block; border:0; width:100%; height:100%; }
+  @media (max-width: 720px) { header { gap:10px; padding:0 12px; } .brand span, .open, .devices { display:none; } select { margin-left:auto; } main { padding:0; } .stage { border-radius:0; box-shadow:none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Element Health <span>Website preview · not live</span></div>
+  <label for="page" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Page</label>
+  <select id="page"></select>
+  <div class="devices" role="group" aria-label="Device">
+    <button type="button" data-device="desktop">Desktop</button>
+    <button type="button" data-device="tablet">Tablet</button>
+    <button type="button" data-device="mobile">Mobile</button>
+  </div>
+  <a class="open" id="open" href="#" target="_blank" rel="noopener">Open full size ↗</a>
+</header>
+<main><div class="stage" id="stage"><iframe id="frame" title="Preview"></iframe></div></main>
+<script>
+  const PAGES = [{"slug": "home", "title": "Home", "devices": ["desktop", "tablet", "mobile"]}];
+  const W = {desktop:1440, tablet:834, mobile:390};
+  const H = {desktop:900, tablet:1100, mobile:844};
+  const sel = document.getElementById('page'), frame = document.getElementById('frame'), stage = document.getElementById('stage'), open = document.getElementById('open');
+  const btns = [...document.querySelectorAll('.devices button')];
+  PAGES.forEach(p => { const o = document.createElement('option'); o.value = p.slug; o.textContent = p.title; sel.appendChild(o); });
+  const q = new URLSearchParams(location.search);
+  let page = q.get('page') || PAGES[0].slug;
+  let device = q.get('device') || (window.innerWidth < 720 ? 'mobile' : 'desktop');
+  function fit() {
+    const main = document.querySelector('main');
+    const avail = main.clientWidth - (window.innerWidth < 720 ? 0 : 48);
+    const w = W[device];
+    const scale = Math.min(1, avail / w);
+    const h = Math.max(main.clientHeight - (window.innerWidth < 720 ? 0 : 48), H[device]) / scale;
+    stage.style.width = w + 'px'; stage.style.height = h + 'px'; stage.style.transform = 'scale(' + scale + ')';
+    stage.style.marginBottom = (h * scale - h) + 'px';
+  }
+  function render() {
+    if (!PAGES.find(p => p.slug === page)) page = PAGES[0].slug;
+    sel.value = page;
+    btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.device === device)));
+    const src = 'pages/' + page + '/' + device + '.html';
+    if (frame.getAttribute('src') !== src) frame.src = src;
+    open.href = src;
+    history.replaceState(null, '', '?page=' + page + '&device=' + device);
+    fit();
+  }
+  sel.addEventListener('change', () => { page = sel.value; render(); });
+  btns.forEach(b => b.addEventListener('click', () => { device = b.dataset.device; render(); }));
+  window.addEventListener('resize', fit);
+  render();
+</script>
+</body>
+</html>
