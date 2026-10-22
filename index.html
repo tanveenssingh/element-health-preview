@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Cache-Control" content="no-cache">
 <title>Element Health · Website preview</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Josefin+Sans:wght@600;700&display=swap">
@@ -41,6 +42,7 @@
 <main><div class="stage" id="stage"><iframe id="frame" title="Preview"></iframe></div></main>
 <script>
   const PAGES = [{"slug": "home", "title": "Home", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "home-mobile-v2", "title": "Home \u00b7 mobile hero v2", "devices": ["mobile"]}];
+  const BUILD = "1792649544";
   const W = {desktop:1440, tablet:834, mobile:390};
   const H = {desktop:900, tablet:1100, mobile:844};
   const sel = document.getElementById('page'), frame = document.getElementById('frame'), stage = document.getElementById('stage'), open = document.getElementById('open');
@@ -65,7 +67,7 @@
     btns.forEach(b => { b.disabled = !pg.devices.includes(b.dataset.device); b.style.opacity = b.disabled ? '0.35' : ''; });
     sel.value = page;
     btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.device === device)));
-    const src = 'pages/' + page + '/' + device + '.html';
+    const src = 'pages/' + page + '/' + device + '.html?b=' + BUILD;
     if (frame.getAttribute('src') !== src) frame.src = src;
     open.href = src;
     history.replaceState(null, '', '?page=' + page + '&device=' + device);
