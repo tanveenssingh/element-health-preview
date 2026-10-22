@@ -75,12 +75,46 @@
   });
 })();
 
+/* --- lab results: filter chips + batch finder (Shopify: same JS inside the COA section) --- */
+(function () {
+  var cards = [].slice.call(document.querySelectorAll('[data-coa-card]'));
+  if (!cards.length) return;
+  var chips = [].slice.call(document.querySelectorAll('[data-coa-filter]'));
+  function setChip(cat) {
+    chips.forEach(function (b) {
+      var on = b.getAttribute('data-coa-filter') === cat;
+      b.setAttribute('aria-pressed', String(on));
+      b.style.background = on ? '#1F1F1F' : 'transparent'; b.style.color = on ? '#F7F2EC' : '#1F1F1F'; b.style.borderColor = on ? '#1F1F1F' : 'rgba(31,31,31,0.12)';
+    });
+    cards.forEach(function (c) { c.style.display = (cat === 'All' || c.getAttribute('data-cat') === cat) ? '' : 'none'; });
+  }
+  chips.forEach(function (b) { b.addEventListener('click', function () { setChip(b.getAttribute('data-coa-filter')); }); });
+
+  var norm = function (s) { return (s || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); };
+  document.querySelectorAll('[data-coa-lookup]').forEach(function (form) {
+    var input = form.querySelector('[data-coa-input]'), msg = form.querySelector('[data-coa-msg]'), base = msg.innerHTML;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var q = norm(input.value);
+      if (q.length < 3) { msg.textContent = 'Enter at least 3 characters from your batch number.'; return; }
+      var hit = cards.filter(function (c) { var b = norm(c.getAttribute('data-batch')); return b && (b.indexOf(q) > -1 || q.indexOf(b) > -1); })[0];
+      if (!hit) { msg.innerHTML = 'No match for &ldquo;' + input.value.replace(/[<>&"]/g, '') + '&rdquo;. ' + base; return; }
+      setChip('All');
+      if (hit.tagName === 'DETAILS') hit.open = true;
+      hit.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      hit.style.boxShadow = '0 0 0 3px #9B7560'; hit.style.borderColor = '#9B7560';
+      setTimeout(function () { hit.style.boxShadow = ''; hit.style.borderColor = ''; }, 2400);
+      msg.textContent = 'Found it: ' + hit.querySelector('[style*="text-transform: uppercase"][style*="font-weight: 700"]').textContent.trim() + '.';
+    });
+  });
+})();
+
 /* --- mobile / tablet menu drawer (preview only) --- */
 (function () {
   var btn = document.querySelector('a[aria-label="Menu"]');
   if (!btn) return;
   var dev = (location.pathname.match(/(desktop|tablet|mobile)\.html$/) || [])[1] || 'mobile';
-  var items = [['Shop by Product', '../collection-oils/' + dev + '.html'], ['Shop by Benefit', '../collection-sleep/' + dev + '.html'], ['CBD Wisdom', '../soon/' + dev + '.html?what=CBD%20Wisdom'], ['Find Your CBD', '../soon/' + dev + '.html?what=Find%20Your%20CBD%20quiz'], ['Our Story', '../soon/' + dev + '.html?what=Our%20Story'], ['Contact', '../soon/' + dev + '.html?what=Contact']];
+  var items = [['Shop by Product', '../collection-oils/' + dev + '.html'], ['Shop by Benefit', '../collection-sleep/' + dev + '.html'], ['CBD Wisdom', '../soon/' + dev + '.html?what=CBD%20Wisdom'], ['Find Your CBD', '../soon/' + dev + '.html?what=Find%20Your%20CBD%20quiz'], ['Lab Results', '../lab-results/' + dev + '.html'], ['Our Story', '../soon/' + dev + '.html?what=Our%20Story'], ['Contact', '../soon/' + dev + '.html?what=Contact']];
   var sub = [['Oils & Tinctures', '../collection-oils/' + dev + '.html'], ['Gummies', '../soon/' + dev + '.html?what=Gummies'], ['Softgels', '../soon/' + dev + '.html?what=Softgels'], ['Topical Salve', '../soon/' + dev + '.html?what=Salve'], ['CBD for Pets', '../soon/' + dev + '.html?what=Pet%20CBD'], ['Bundles', '../soon/' + dev + '.html?what=Bundles']];
   var ben = [['Sleep Support', '../collection-sleep/' + dev + '.html'], ['Calm & Stress', '../soon/' + dev + '.html?what=Calm%20%26%20Stress'], ['Pain & Recovery', '../soon/' + dev + '.html?what=Pain%20%26%20Recovery'], ['Focus & Energy', '../soon/' + dev + '.html?what=Focus%20%26%20Energy'], ['Social & Uplift', '../soon/' + dev + '.html?what=Social%20%26%20Uplift']];
   var J = "font-family:'Josefin Sans',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.18em;";
