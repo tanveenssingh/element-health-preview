@@ -74,3 +74,30 @@
     update();
   });
 })();
+
+/* --- mobile / tablet menu drawer (preview only) --- */
+(function () {
+  var btn = document.querySelector('a[aria-label="Menu"]');
+  if (!btn) return;
+  var dev = (location.pathname.match(/(desktop|tablet|mobile)\.html$/) || [])[1] || 'mobile';
+  var items = [['Shop by Product', '../collection-oils/' + dev + '.html'], ['Shop by Benefit', '../collection-sleep/' + dev + '.html'], ['CBD Wisdom', '../soon/' + dev + '.html?what=CBD%20Wisdom'], ['Find Your CBD', '../soon/' + dev + '.html?what=Find%20Your%20CBD%20quiz'], ['Our Story', '../soon/' + dev + '.html?what=Our%20Story'], ['Contact', '../soon/' + dev + '.html?what=Contact']];
+  var sub = [['CBD Oils', '../collection-oils/' + dev + '.html'], ['Gummies', '../soon/' + dev + '.html?what=Gummies'], ['Softgels', '../soon/' + dev + '.html?what=Softgels'], ['Topical Salve', '../soon/' + dev + '.html?what=Salve'], ['CBD for Pets', '../soon/' + dev + '.html?what=Pet%20CBD'], ['Bundles', '../soon/' + dev + '.html?what=Bundles']];
+  var ben = [['Sleep Support', '../collection-sleep/' + dev + '.html'], ['Calm & Stress', '../soon/' + dev + '.html?what=Calm%20%26%20Stress'], ['Pain & Recovery', '../soon/' + dev + '.html?what=Pain%20%26%20Recovery'], ['Focus & Energy', '../soon/' + dev + '.html?what=Focus%20%26%20Energy'], ['Social & Uplift', '../soon/' + dev + '.html?what=Social%20%26%20Uplift']];
+  var J = "font-family:'Josefin Sans',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.18em;";
+  var d = document.createElement('div');
+  d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', 'Menu');
+  d.style.cssText = 'position:fixed;inset:0;z-index:50;display:none;background:rgba(31,31,31,.35);';
+  d.innerHTML = '<div style="position:absolute;top:0;left:0;bottom:0;width:min(86vw,360px);background:#F7F2EC;box-shadow:20px 0 60px rgba(31,31,31,.2);display:flex;flex-direction:column;overflow:auto;">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid rgba(31,31,31,.12);"><span style="' + J + 'font-size:12px;">Menu</span><button type="button" data-close aria-label="Close menu" style="width:40px;height:40px;border:0;background:transparent;font-size:22px;cursor:pointer;color:#1F1F1F;">&times;</button></div>'
+    + '<div style="padding:8px 20px 24px;display:flex;flex-direction:column;">'
+    + '<div style="padding:14px 0 6px;' + J + 'font-size:10px;color:#9B7560;letter-spacing:.26em;font-weight:600;">Shop by product</div>' + sub.map(function (x) { return '<a href="' + x[1] + '" style="padding:10px 0;font-size:16px;color:#1F1F1F;text-decoration:none;border-bottom:1px solid rgba(31,31,31,.08);">' + x[0] + '</a>'; }).join('')
+    + '<div style="padding:18px 0 6px;' + J + 'font-size:10px;color:#9B7560;letter-spacing:.26em;font-weight:600;">Shop by benefit</div>' + ben.map(function (x) { return '<a href="' + x[1] + '" style="padding:10px 0;font-size:16px;color:#1F1F1F;text-decoration:none;border-bottom:1px solid rgba(31,31,31,.08);">' + x[0] + '</a>'; }).join('')
+    + '<div style="padding:18px 0 6px;"></div>' + items.slice(2).map(function (x) { return '<a href="' + x[1] + '" style="padding:12px 0;' + J + 'font-size:12px;color:#1F1F1F;text-decoration:none;">' + x[0] + '</a>'; }).join('')
+    + '</div></div>';
+  document.body.appendChild(d);
+  function open() { d.style.display = 'block'; document.body.style.overflow = 'hidden'; }
+  function close() { d.style.display = 'none'; document.body.style.overflow = ''; }
+  btn.addEventListener('click', function (e) { e.preventDefault(); open(); });
+  d.addEventListener('click', function (e) { if (e.target === d || e.target.closest('[data-close]')) close(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();

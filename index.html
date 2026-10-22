@@ -42,7 +42,7 @@
 <main><div class="stage" id="stage"><iframe id="frame" title="Preview"></iframe></div></main>
 <script>
   const PAGES = [{"slug": "home", "title": "Home", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "product-max-60", "title": "Product \u00b7 Max Strength 60 mL", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "collection-oils", "title": "Collection \u00b7 CBD Oils (by product)", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "collection-sleep", "title": "Collection \u00b7 Sleep Support (by benefit)", "devices": ["desktop", "tablet", "mobile"]}];
-  const BUILD = "1792652757";
+  const BUILD = "1792652978";
   const W = {desktop:1440, tablet:834, mobile:390};
   const H = {desktop:900, tablet:1100, mobile:844};
   const sel = document.getElementById('page'), frame = document.getElementById('frame'), stage = document.getElementById('stage'), open = document.getElementById('open');
@@ -73,6 +73,12 @@
     history.replaceState(null, '', '?page=' + page + '&device=' + device);
     fit();
   }
+  frame.addEventListener('load', () => {
+    try {
+      const path = frame.contentWindow.location.pathname; const m = path.match(/pages[/]([^/]+)[/](desktop|tablet|mobile)[.]html$/);
+      if (m) { if (m[1] !== 'soon' && PAGES.find(p => p.slug === m[1])) { page = m[1]; } device = m[2]; sel.value = page; btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.device === device))); history.replaceState(null, '', '?page=' + page + '&device=' + device); fit(); }
+    } catch (e) {}
+  });
   sel.addEventListener('change', () => { page = sel.value; render(); });
   btns.forEach(b => b.addEventListener('click', () => { device = b.dataset.device; render(); }));
   window.addEventListener('resize', fit);
