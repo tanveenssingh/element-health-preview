@@ -75,6 +75,42 @@
   });
 })();
 
+/* --- product gallery: thumbnails swap the main image (desktop); dots jump the swipe row (tablet/mobile).
+       Shopify: Horizon's product media gallery does this natively. --- */
+(function () {
+  var main = document.querySelector('[data-pdp-main]');
+  var thumbs = [].slice.call(document.querySelectorAll('[data-pdp-thumb]'));
+  function show(i) {
+    var t = thumbs[i]; if (!t || !main) return;
+    main.style.opacity = '0';
+    setTimeout(function () { main.src = t.getAttribute('data-src'); main.alt = t.getAttribute('data-alt'); main.style.opacity = '1'; }, 120);
+    thumbs.forEach(function (b, j) { var on = j === i; b.setAttribute('aria-pressed', String(on)); b.style.borderColor = on ? '#1F1F1F' : 'rgba(31,31,31,0.12)'; });
+  }
+  thumbs.forEach(function (b, i) {
+    b.addEventListener('click', function () { show(i); });
+    b.addEventListener('mouseenter', function () { show(i); });
+  });
+  if (main && thumbs.length) {
+    var cur = function () { return thumbs.findIndex(function (b) { return b.getAttribute('aria-pressed') === 'true'; }); };
+    main.style.cursor = 'pointer';
+    main.addEventListener('click', function () { show((cur() + 1) % thumbs.length); });
+    document.addEventListener('keydown', function (e) {
+      if (e.target.closest('input, textarea, select')) return;
+      if (e.key === 'ArrowRight') show((cur() + 1) % thumbs.length);
+      if (e.key === 'ArrowLeft') show((cur() - 1 + thumbs.length) % thumbs.length);
+    });
+  }
+  document.querySelectorAll('.eh-dots [data-dot]').forEach(function (dot) {
+    function go() {
+      var row = dot.parentElement.parentElement.querySelector('.eh-swipe'); if (!row) return;
+      var items = [].slice.call(row.children).filter(function (el) { return el.tagName !== 'STYLE'; });
+      var it = items[+dot.getAttribute('data-dot')]; if (it) row.scrollTo({ left: it.offsetLeft - row.offsetLeft - (parseFloat(getComputedStyle(row).paddingLeft) || 0), behavior: 'smooth' });
+    }
+    dot.addEventListener('click', go);
+    dot.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  });
+})();
+
 /* --- lab results: filter chips + batch finder (Shopify: same JS inside the COA section) --- */
 (function () {
   var cards = [].slice.call(document.querySelectorAll('[data-coa-card]'));
