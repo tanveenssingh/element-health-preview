@@ -109,12 +109,25 @@
   });
 })();
 
+/* --- blog: tag chips (Shopify: links to /blogs/cbd-education/tagged/<tag>) --- */
+(function () {
+  var cards = [].slice.call(document.querySelectorAll('[data-blog-card]'));
+  var chips = [].slice.call(document.querySelectorAll('[data-blog-filter]'));
+  if (!cards.length || !chips.length) return;
+  var bigStyle = cards[0].getAttribute('style');
+  function set(tag) {
+    chips.forEach(function (b) { var on = b.getAttribute('data-blog-filter') === tag; b.setAttribute('aria-pressed', String(on)); b.style.background = on ? '#1F1F1F' : 'transparent'; b.style.color = on ? '#F7F2EC' : '#1F1F1F'; b.style.borderColor = on ? '#1F1F1F' : 'rgba(31,31,31,0.12)'; });
+    cards.forEach(function (c) { var tags = (c.getAttribute('data-tags') || '').split('|'); c.style.display = (tag === 'All' || tags.indexOf(tag) > -1) ? '' : 'none'; });
+  }
+  chips.forEach(function (b) { b.addEventListener('click', function () { set(b.getAttribute('data-blog-filter')); }); });
+})();
+
 /* --- mobile / tablet menu drawer (preview only) --- */
 (function () {
   var btn = document.querySelector('a[aria-label="Menu"]');
   if (!btn) return;
   var dev = (location.pathname.match(/(desktop|tablet|mobile)\.html$/) || [])[1] || 'mobile';
-  var items = [['Shop by Product', '../collection-oils/' + dev + '.html'], ['Shop by Benefit', '../collection-sleep/' + dev + '.html'], ['CBD Wisdom', '../soon/' + dev + '.html?what=CBD%20Wisdom'], ['Find Your CBD', '../soon/' + dev + '.html?what=Find%20Your%20CBD%20quiz'], ['Lab Results', '../lab-results/' + dev + '.html'], ['Our Story', '../soon/' + dev + '.html?what=Our%20Story'], ['Contact', '../soon/' + dev + '.html?what=Contact']];
+  var items = [['Shop by Product', '../collection-oils/' + dev + '.html'], ['Shop by Benefit', '../collection-sleep/' + dev + '.html'], ['CBD Wisdom', '../blog/' + dev + '.html'], ['Find Your CBD', '../soon/' + dev + '.html?what=Find%20Your%20CBD%20quiz'], ['Lab Results', '../lab-results/' + dev + '.html'], ['Our Story', '../soon/' + dev + '.html?what=Our%20Story'], ['Contact', '../soon/' + dev + '.html?what=Contact']];
   var sub = [['Oils & Tinctures', '../collection-oils/' + dev + '.html'], ['Gummies', '../soon/' + dev + '.html?what=Gummies'], ['Softgels', '../soon/' + dev + '.html?what=Softgels'], ['Topical Salve', '../soon/' + dev + '.html?what=Salve'], ['CBD for Pets', '../soon/' + dev + '.html?what=Pet%20CBD'], ['Bundles', '../soon/' + dev + '.html?what=Bundles']];
   var ben = [['Sleep Support', '../collection-sleep/' + dev + '.html'], ['Calm & Stress', '../soon/' + dev + '.html?what=Calm%20%26%20Stress'], ['Pain & Recovery', '../soon/' + dev + '.html?what=Pain%20%26%20Recovery'], ['Focus & Energy', '../soon/' + dev + '.html?what=Focus%20%26%20Energy'], ['Social & Uplift', '../soon/' + dev + '.html?what=Social%20%26%20Uplift']];
   var J = "font-family:'Josefin Sans',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.18em;";
