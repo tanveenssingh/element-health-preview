@@ -18,14 +18,21 @@
     window.addEventListener('resize', measure);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
 
-    function pause() { paused = true; clearTimeout(resumeTimer); }
-    function resumeSoon(ms) { clearTimeout(resumeTimer); resumeTimer = setTimeout(function () { pos = wrap.scrollLeft; paused = reduce; }, ms); }
+    function pause() { paused = true; clearTimeout(resumeTimer); resumeTimer = null; }
+    function resumeSoon(ms) { clearTimeout(resumeTimer); resumeTimer = setTimeout(function () { resumeTimer = null; pos = wrap.scrollLeft; paused = reduce; }, ms); }
 
-    wrap.addEventListener('mouseenter', pause);
-    wrap.addEventListener('mouseleave', function () { resumeSoon(150); });
-    wrap.addEventListener('touchstart', pause, { passive: true });
-    wrap.addEventListener('touchend', function () { resumeSoon(2500); }, { passive: true });
-    wrap.addEventListener('touchcancel', function () { resumeSoon(2500); }, { passive: true });
+    var lastTouch = 0;
+    // Mouse: hover pauses, leaving resumes. Browsers synthesise mouse events after a tap, so ignore those.
+    wrap.addEventListener('mouseenter', function () { if (Date.now() - lastTouch > 1200) pause(); });
+    wrap.addEventListener('mouseleave', function () { if (Date.now() - lastTouch > 1200) resumeSoon(150); });
+    // Touch: finger down pauses; lifting resumes after a moment; a tap while paused resumes at once.
+    wrap.addEventListener('touchstart', function () {
+      lastTouch = Date.now();
+      if (paused && !resumeTimer) { pos = wrap.scrollLeft; paused = reduce; return; }
+      pause();
+    }, { passive: true });
+    wrap.addEventListener('touchend', function () { lastTouch = Date.now(); if (paused) resumeSoon(800); }, { passive: true });
+    wrap.addEventListener('touchcancel', function () { lastTouch = Date.now(); if (paused) resumeSoon(800); }, { passive: true });
     wrap.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse') { pause(); } });
     wrap.addEventListener('scroll', function () {
       // keep the loop seamless when the user drags past either end
