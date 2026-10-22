@@ -40,7 +40,7 @@
 </header>
 <main><div class="stage" id="stage"><iframe id="frame" title="Preview"></iframe></div></main>
 <script>
-  const PAGES = [{"slug": "home", "title": "Home", "devices": ["desktop", "tablet", "mobile"]}];
+  const PAGES = [{"slug": "home", "title": "Home", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "home-mobile-v2", "title": "Home \u00b7 mobile hero v2", "devices": ["mobile"]}];
   const W = {desktop:1440, tablet:834, mobile:390};
   const H = {desktop:900, tablet:1100, mobile:844};
   const sel = document.getElementById('page'), frame = document.getElementById('frame'), stage = document.getElementById('stage'), open = document.getElementById('open');
@@ -60,6 +60,9 @@
   }
   function render() {
     if (!PAGES.find(p => p.slug === page)) page = PAGES[0].slug;
+    const pg = PAGES.find(p => p.slug === page);
+    if (!pg.devices.includes(device)) device = pg.devices[0];
+    btns.forEach(b => { b.disabled = !pg.devices.includes(b.dataset.device); b.style.opacity = b.disabled ? '0.35' : ''; });
     sel.value = page;
     btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.device === device)));
     const src = 'pages/' + page + '/' + device + '.html';
