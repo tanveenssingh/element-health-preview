@@ -32,18 +32,19 @@
     <div style="display: flex; justify-content: flex-end; gap: 4px;"><a href="#" aria-label="Search" style="display: flex; width: 44px; height: 44px; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F1F1F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></a><a href="#" aria-label="Cart" style="display: flex; width: 44px; height: 44px; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F1F1F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l-1 12H7L6 7z"></path><path d="M9 7a3 3 0 0 1 6 0"></path></svg></a></div>
   </div>
 
-  <!-- Hero: text first, image below (Horizon image banner, mobile content above image) -->
-  <div style="background: #E8DED2;">
-    <div style="box-sizing: border-box; padding: 36px 24px 28px; display: flex; flex-direction: column; gap: 16px;">
+  <!-- Hero: tall image banner, text overlaid at the top (Horizon image banner: mobile image, content top, light overlay) -->
+  <div style="position: relative; height: 740px; overflow: hidden; background: #E8DED2;">
+    <div style="position: absolute; inset: 0; background-image: url('../../assets/1b9bcc2e2bac393cb276c668603fd20c.jpg'); background-size: cover; background-position: 50% 100%;"></div>
+    <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(232,222,210,0.92) 0%, rgba(232,222,210,0.78) 40%, rgba(232,222,210,0) 58%);"></div>
+    <div style="position: absolute; left: 24px; right: 24px; top: 0; display: flex; flex-direction: column; gap: 14px; padding-top: 32px;">
       <div style="font-family: 'Josefin Sans', 'Roboto Condensed', Arial, sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: #9B7560;">Full spectrum CBD · Family farms</div>
-      <h1 style="font-family: 'Josefin Sans', 'Roboto Condensed', Arial, sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 34px; line-height: 1.15; color: #1F1F1F; margin: 0;">Better sleep.<br>Better days.</h1>
-      <p style="margin: 0; font-size: 17px; line-height: 1.7; color: #1F1F1F;">Full spectrum hemp extract in organic, cold-pressed hemp seed oil. Grown, extracted and bottled in the USA, third-party tested in every batch.</p>
-      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
+      <h1 style="font-family: 'Josefin Sans', 'Roboto Condensed', Arial, sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 36px; line-height: 1.1; color: #1F1F1F; margin: 0;">Better sleep.<br>Better days.</h1>
+      <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #1F1F1F; max-width: 320px;">Full spectrum hemp extract in organic, cold-pressed hemp seed oil. Grown, extracted and bottled in the USA, third-party tested in every batch.</p>
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px; max-width: 260px;">
         <a href="#" style="display: inline-flex; align-items: center; justify-content: center; height: 48px; background: #3E4256; color: #F7F2EC; border: 1px solid #3E4256; font-family: 'Josefin Sans', 'Roboto Condensed', Arial, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; border-radius: 999px; box-sizing: border-box;">Shop the formulas</a>
         <a href="#" style="display: inline-flex; align-items: center; justify-content: center; height: 48px; background: transparent; color: #1F1F1F; border: 1px solid #1F1F1F; font-family: 'Josefin Sans', 'Roboto Condensed', Arial, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; border-radius: 999px; box-sizing: border-box;">Find your CBD</a>
       </div>
     </div>
-    <div style="margin: 0 24px 32px; height: 390px; border-radius: 20px; overflow: hidden; background-image: url('../../assets/58f25d9e8b0a64ed691d105401e4cb32.jpg'); background-size: cover; background-position: 50% 50%;"></div>
   </div>
 
   <!-- Trust strip: one-line ticker (Horizon: Marquee section) -->
