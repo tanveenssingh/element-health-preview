@@ -129,6 +129,12 @@
 
   var launch = el('button', 'ehfb-launch', '<span class="ehfb-cap" style="font-size:11px;">Feedback</span><span class="ehfb-count">0</span>');
   launch.type = 'button'; launch.setAttribute('aria-label', 'Open feedback'); root.appendChild(launch);
+  // inside the preview shell, the shell header's Feedback button drives the panel
+  var SHELL = null; try { if (window.parent !== window) SHELL = window.parent.document; } catch (e) {}
+  var EMBED = !!(SHELL && SHELL.getElementById('fbbtn'));
+  if (EMBED) launch.style.display = 'none';
+  function tellShell() { if (!EMBED) return; try { var c = SHELL.getElementById('fbcount'); if (c) c.textContent = launch.querySelector('.ehfb-count').textContent; SHELL.getElementById('fbbtn').setAttribute('aria-pressed', String(OPEN)); } catch (e) {} }
+  window.EHFB = { toggle: function () { setOpen(!OPEN); }, open: function () { setOpen(true); } };
 
   var panel = el('aside', 'ehfb-panel'); panel.setAttribute('aria-label', 'Feedback');
   panel.innerHTML =
@@ -145,7 +151,7 @@
   var banner = el('div', 'ehfb ehfb-banner', '<span>Click the spot you want to comment on</span><button type="button" class="ehfb-btn sm">Cancel</button>');
   banner.style.display = 'none'; document.body.appendChild(banner);
 
-  function setOpen(v) { OPEN = v; panel.classList.toggle('on', v); }
+  function setOpen(v) { OPEN = v; panel.classList.toggle('on', v); tellShell(); }
   launch.addEventListener('click', function () { setOpen(!OPEN); });
   panel.querySelector('.ehfb-x').addEventListener('click', function () { setOpen(false); });
   panel.querySelector('[data-add]').addEventListener('click', startPick);
@@ -179,6 +185,7 @@
     });
     var open = NOTES.filter(function (n) { return n.status !== 'done'; }).length;
     launch.querySelector('.ehfb-count').textContent = open;
+    tellShell();
   }
   function goTo(n) {
     if (n.page !== PAGE || n.device !== DEVICE) { location.href = '../' + n.page + '/' + n.device + '.html#fb=' + n.id; return; }

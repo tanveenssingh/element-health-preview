@@ -20,11 +20,14 @@
   .devices button { height:28px; padding:0 14px; border:0; border-radius:999px; background:transparent; font:inherit; font-size:12px; font-weight:500; letter-spacing:0.04em; color:var(--muted); cursor:pointer; }
   .devices button[aria-pressed="true"] { background:var(--slate); color:var(--cream); }
   .open { font-size:12px; color:var(--muted); text-decoration:none; white-space:nowrap; }
+  .fb { height:34px; padding:0 8px 0 16px; border:0; border-radius:999px; background:var(--slate); color:var(--cream); font-family:'Josefin Sans', sans-serif; font-weight:700; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; display:inline-flex; align-items:center; gap:10px; cursor:pointer; white-space:nowrap; }
+  .fb span { min-width:20px; height:20px; padding:0 6px; box-sizing:border-box; border-radius:999px; background:var(--cream); color:var(--slate); font-family:Roboto, sans-serif; font-size:11px; letter-spacing:0; display:inline-flex; align-items:center; justify-content:center; }
+  .fb[aria-pressed="true"] { background:var(--ink); }
   .open:hover { color:var(--ink); }
   main { flex:1 1 auto; min-height:0; position:relative; overflow:auto; display:flex; justify-content:center; align-items:flex-start; padding:24px; box-sizing:border-box; }
   .stage { flex:0 0 auto; background:#fff; box-shadow:0 20px 60px rgba(31,31,31,0.18); border-radius:14px; overflow:hidden; transform-origin:top center; }
   .stage iframe { display:block; border:0; width:100%; height:100%; }
-  @media (max-width: 720px) { header { height:auto; flex-wrap:wrap; gap:8px; padding:8px 12px; } .brand span, .open { display:none; } select { margin-left:auto; } .devices { order:3; width:100%; box-sizing:border-box; justify-content:center; margin-left:0; } main { padding:0; } .stage { border-radius:0; box-shadow:none; } }
+  @media (max-width: 720px) { header { height:auto; flex-wrap:wrap; gap:8px; padding:8px 12px; } .brand span, .open { display:none; } select { order:2; flex:1 1 140px; min-width:0; margin-left:0; } .devices { order:3; margin-left:0; } .devices button { padding:0 10px; } .fb { order:1; margin-left:auto; } main { padding:0; } .stage { border-radius:0; box-shadow:none; } }
 </style>
 </head>
 <body>
@@ -37,12 +40,13 @@
     <button type="button" data-device="tablet">Tablet</button>
     <button type="button" data-device="mobile">Mobile</button>
   </div>
+  <button type="button" class="fb" id="fbbtn" aria-pressed="false">Feedback <span id="fbcount">0</span></button>
   <a class="open" id="open" href="#" target="_blank" rel="noopener">Open full size ↗</a>
 </header>
 <main><div class="stage" id="stage"><iframe id="frame" title="Preview"></iframe></div></main>
 <script>
   const PAGES = [{"slug": "home", "title": "Home", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "product-max-60", "title": "Product \u00b7 Max Strength 60 mL", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "collection-oils", "title": "Collection \u00b7 Oils & Tinctures (by product)", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "collection-sleep", "title": "Collection \u00b7 Sleep Support (by benefit)", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "lab-results", "title": "Lab Results (COAs)", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "contact", "title": "Contact Us", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "shipping", "title": "Shipping Policy", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "returns", "title": "Return Policy", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "privacy", "title": "Privacy Policy", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "cookies", "title": "Cookie Policy", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "accessibility", "title": "Accessibility Statement", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "faq", "title": "FAQ", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "terms", "title": "Terms & Conditions", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "story", "title": "Our Story", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "blog", "title": "CBD Wisdom (blog)", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "article-circadian", "title": "Article \u00b7 Circadian Rhythm", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "article-gratitude", "title": "Article \u00b7 Mindfulness Series - Gratitude", "devices": ["desktop", "tablet", "mobile"]}, {"slug": "article-amazon", "title": "Article \u00b7 Should I buy CBD on Amazon?", "devices": ["desktop", "tablet", "mobile"]}];
-  const BUILD = "1793015057";
+  const BUILD = "1793015855";
   const W = {desktop:1440, tablet:834, mobile:390};
   const H = {desktop:900, tablet:1100, mobile:844};
   const sel = document.getElementById('page'), frame = document.getElementById('frame'), stage = document.getElementById('stage'), open = document.getElementById('open');
@@ -56,7 +60,7 @@
     const avail = main.clientWidth - (window.innerWidth < 720 ? 0 : 48);
     const w = W[device];
     const scale = Math.min(1, avail / w);
-    const h = Math.max(main.clientHeight - (window.innerWidth < 720 ? 0 : 48), H[device]) / scale;
+    const h = Math.max(main.clientHeight - (window.innerWidth < 720 ? 0 : 48), 320) / scale;
     stage.style.width = w + 'px'; stage.style.height = h + 'px'; stage.style.transform = 'scale(' + scale + ')';
     stage.style.marginBottom = (h * scale - h) + 'px';
   }
@@ -80,6 +84,7 @@
     } catch (e) {}
   });
   sel.addEventListener('change', () => { page = sel.value; render(); });
+  document.getElementById('fbbtn').addEventListener('click', () => { try { frame.contentWindow.EHFB && frame.contentWindow.EHFB.toggle(); } catch (e) {} });
   btns.forEach(b => b.addEventListener('click', () => { device = b.dataset.device; render(); }));
   window.addEventListener('resize', fit);
   render();
