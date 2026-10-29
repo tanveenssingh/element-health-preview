@@ -168,8 +168,8 @@ document.querySelectorAll('[data-contact-form]').forEach(function (f) {
   var btn = document.querySelector('a[aria-label="Menu"]');
   if (!btn) return;
   var dev = (location.pathname.match(/(desktop|tablet|mobile)\.html$/) || [])[1] || 'mobile';
-  var items = [['Shop by Product', '../collection-oils/' + dev + '.html'], ['Shop by Benefit', '../collection-sleep/' + dev + '.html'], ['CBD Wisdom', '../blog/' + dev + '.html'], ['Find Your CBD', '../soon/' + dev + '.html?what=Find%20Your%20CBD%20quiz'], ['Lab Results', '../lab-results/' + dev + '.html'], ['Our Story', '../story/' + dev + '.html'], ['Contact', '../contact/' + dev + '.html']];
-  var sub = [['Oils & Tinctures', '../collection-oils/' + dev + '.html'], ['Gummies', '../soon/' + dev + '.html?what=Gummies'], ['Softgels', '../soon/' + dev + '.html?what=Softgels'], ['Topical Salve', '../soon/' + dev + '.html?what=Salve'], ['CBD for Pets', '../soon/' + dev + '.html?what=Pet%20CBD'], ['Bundles', '../soon/' + dev + '.html?what=Bundles']];
+  var items = [['Shop by Product', '../collection-oils/' + dev + '.html'], ['Shop by Benefit', '../collection-sleep/' + dev + '.html'], ['CBD Wisdom', '../blog/' + dev + '.html'], ['Find Your CBD', '../soon/' + dev + '.html?what=Find%20Your%20CBD%20quiz'], ['COAs', '../lab-results/' + dev + '.html'], ['Our Story', '../story/' + dev + '.html'], ['Contact', '../contact/' + dev + '.html']];
+  var sub = [['Full Spectrum & Specialty Oils', '../collection-oils/' + dev + '.html'], ['Gummies', '../soon/' + dev + '.html?what=Gummies'], ['Softgels', '../soon/' + dev + '.html?what=Softgels'], ['Topical Salve', '../soon/' + dev + '.html?what=Salve'], ['CBD for Pets', '../soon/' + dev + '.html?what=Pet%20CBD'], ['Bundles', '../soon/' + dev + '.html?what=Bundles']];
   var ben = [['Sleep Support', '../collection-sleep/' + dev + '.html'], ['Calm & Stress', '../soon/' + dev + '.html?what=Calm%20%26%20Stress'], ['Pain & Recovery', '../soon/' + dev + '.html?what=Pain%20%26%20Recovery'], ['Focus & Energy', '../soon/' + dev + '.html?what=Focus%20%26%20Energy'], ['Social & Uplift', '../soon/' + dev + '.html?what=Social%20%26%20Uplift']];
   var J = "font-family:'Josefin Sans',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.18em;";
   var d = document.createElement('div');
@@ -188,4 +188,26 @@ document.querySelectorAll('[data-contact-form]').forEach(function (f) {
   btn.addEventListener('click', function (e) { e.preventDefault(); open(); });
   d.addEventListener('click', function (e) { if (e.target === d || e.target.closest('[data-close]')) close(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();
+
+/* --- carousel arrows: [data-swipe-prev] / [data-swipe-next] scroll the nearest .eh-swipe row by one card --- */
+(function () {
+  document.querySelectorAll('[data-swipe-prev], [data-swipe-next]').forEach(function (btn) {
+    var box = btn; while (box && !box.querySelector('.eh-swipe')) box = box.parentElement;
+    if (!box) return;
+    var row = box.querySelector('.eh-swipe');
+    var dir = btn.hasAttribute('data-swipe-prev') ? -1 : 1;
+    function sync() {
+      var max = row.scrollWidth - row.clientWidth - 2;
+      var off = dir < 0 ? row.scrollLeft <= 2 : row.scrollLeft >= max;
+      btn.disabled = off; btn.style.opacity = off ? '0.3' : '1'; btn.style.cursor = off ? 'default' : 'pointer';
+    }
+    btn.addEventListener('click', function () {
+      var items = [].filter.call(row.children, function (el) { return el.tagName !== 'STYLE'; });
+      var step = items.length > 1 ? items[1].offsetLeft - items[0].offsetLeft : row.clientWidth * 0.8;
+      row.scrollBy({ left: dir * step, behavior: 'smooth' });
+    });
+    row.addEventListener('scroll', function () { requestAnimationFrame(sync); }, { passive: true });
+    window.addEventListener('resize', sync); sync();
+  });
 })();
