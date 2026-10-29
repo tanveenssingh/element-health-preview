@@ -8,3 +8,7 @@
 .eh-scroll { overflow-x: auto !important; overflow-y: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; cursor: grab; }
 .eh-scroll::-webkit-scrollbar { display: none; }
 .eh-scroll .eh-marquee { animation: none !important; }
+
+/* Quantity stepper: hide the browser's own number spinners */
+[data-qty-val]::-webkit-inner-spin-button, [data-qty-val]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+[data-qty] button:hover { opacity: 0.6; }

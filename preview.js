@@ -211,3 +211,23 @@ document.querySelectorAll('[data-contact-form]').forEach(function (f) {
     window.addEventListener('resize', sync); sync();
   });
 })();
+
+/* --- product page: pack choice + quantity stepper update the Add to cart total --- */
+(function () {
+  var qty = document.querySelector('[data-qty]'); if (!qty) return;
+  var input = qty.querySelector('[data-qty-val]'), total = document.querySelector('[data-cart-total]');
+  var cards = [].slice.call(document.querySelectorAll('[data-pack-card]'));
+  function fmt(n) { return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function update() {
+    var n = Math.max(1, Math.min(99, parseInt(input.value, 10) || 1)); input.value = n;
+    var sel = document.querySelector('input[name="pack"]:checked');
+    cards.forEach(function (c) { var on = c.querySelector('input').checked; c.style.borderColor = on ? '#1F1F1F' : 'rgba(31,31,31,0.12)'; });
+    if (sel && total) total.textContent = fmt(parseFloat(sel.getAttribute('data-price')) * n);
+    qty.querySelector('[data-qty-dec]').style.opacity = n <= 1 ? '0.3' : '1';
+  }
+  qty.querySelector('[data-qty-dec]').addEventListener('click', function () { input.value = (parseInt(input.value, 10) || 1) - 1; update(); });
+  qty.querySelector('[data-qty-inc]').addEventListener('click', function () { input.value = (parseInt(input.value, 10) || 1) + 1; update(); });
+  input.addEventListener('change', update);
+  cards.forEach(function (c) { c.querySelector('input').addEventListener('change', update); });
+  update();
+})();
